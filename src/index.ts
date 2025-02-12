@@ -1,15 +1,32 @@
-import { Database } from 'bun:sqlite'
 import { Hono } from 'hono'
-
-const db = new Database(':memory:')
-const query = db.query("SELECT 'Hello world' as message;")
-const result = query.get() // => { message: "Hello world" }
-console.log(result)
-
+import { cors } from 'hono/cors'
 const app = new Hono()
 
-app.get('/', ctx => {
-    return ctx.text('Hello Hono!')
+app.use('/*', cors())
+
+app.get('/subscriptions', ctx => {
+    return ctx.json([
+        {
+            name: 'The Verge',
+            category: 'Tech + Culture',
+            feedLink: 'https://www.theverge.com/rss/index.xml',
+        },
+        {
+            name: 'CNET',
+            category: 'Smart Home',
+            feedLink: 'https://www.cnet.com/rss/news/',
+        },
+        {
+            name: 'Engadget',
+            category: 'Tech',
+            feedLink: 'https://www.engadget.com/rss/',
+        },
+        {
+            name: 'Tech Crunch',
+            category: 'Startup',
+            feedLink: 'https://techcrunch.com/feed/',
+        },
+    ])
 })
 
 export default app
