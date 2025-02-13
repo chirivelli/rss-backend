@@ -29,4 +29,10 @@ app.get('/subscriptions', ctx => {
     ])
 })
 
+app.get('/theverge', async ctx => {
+    const tvRes = await fetch('https://www.theverge.com/rss/index.xml')
+    const tvXml = await tvRes.text()
+    return ctx.text(tvXml)
+})
+
 export default app
