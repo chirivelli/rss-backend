@@ -1,7 +1,7 @@
 {
   "name": "rss-aggregator",
   "scripts": {
-    "dev": "bun run --hot src/index.ts"
+    "dev": "bun run --hot src/index.js"
   },
   "dependencies": {
     "hono": "^4.6.20",
