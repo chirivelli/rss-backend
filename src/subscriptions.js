@@ -7,10 +7,11 @@ subscriptions.get('/:username', async ctx => {
     const username = ctx.req.param('username')
 
     const userQuery = db.query(`
-        SELECT * FROM users WHERE username='${username}';
+        SELECT * 
+        FROM users 
+        WHERE username='${username}';
     `)
     const user = userQuery.get()
-    console.log(user)
 
     const query = db.query(`
         SELECT name, feed_link
@@ -19,7 +20,6 @@ subscriptions.get('/:username', async ctx => {
         ON sites.id = subscriptions.site_id
         WHERE subscriptions.user_id = ${user.id};
     `)
-    console.log(query.all())
 
     return ctx.json(query.all())
 })
