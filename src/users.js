@@ -8,6 +8,7 @@ users.get('/', ctx => {
         SELECT * 
         FROM users;
     `)
+
     return ctx.json(query.all())
 })
 
@@ -19,10 +20,8 @@ users.get('/:username', async ctx => {
         FROM users 
         WHERE username='${username}';
     `)
-    const user = query.get()
-    console.log(user)
 
-    return ctx.json(user)
+    return ctx.json(query.get())
 })
 
 export default users
