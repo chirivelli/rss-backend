@@ -1,27 +1,24 @@
 import { Hono } from 'hono'
-import db from './sqlite'
+import { User } from './mongodb'
 
 const users = new Hono()
 
-users.get('/', ctx => {
-    const query = db.query(`
-        SELECT * 
-        FROM users;
-    `)
+users.get('/', async ctx => {
+    console.log('GET /users/')
 
-    return ctx.json(query.all())
+    const users = await User.find()
+
+    return ctx.json(users)
 })
 
 users.get('/:username', async ctx => {
+    console.log('GET /users/:username')
+
     const username = ctx.req.param('username')
 
-    const query = db.query(`
-        SELECT * 
-        FROM users 
-        WHERE username='${username}';
-    `)
+    const user = await User.findOne({ username: username })
 
-    return ctx.json(query.get())
+    return ctx.text(username)
 })
 
 export default users

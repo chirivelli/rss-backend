@@ -1,11 +1,12 @@
 {
   "name": "rss-aggregator",
   "scripts": {
-    "dev": "bun run --hot src/index.js"
+    "dev": "bun run --hot src/app.js"
   },
   "dependencies": {
     "fast-xml-parser": "^5.0.4",
     "hono": "^4.6.20",
+    "mongoose": "^8.10.1",
     "prettier": "^3.5.0"
   },
   "devDependencies": {
