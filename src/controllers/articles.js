@@ -1,15 +1,10 @@
 import { Hono } from 'hono'
 import { User } from '../mongodb'
-import * as logger from '../logger'
 import { XMLParser } from 'fast-xml-parser'
 
 const articles = new Hono()
 
 articles.get('/', async ctx => {
-    logger.log('GET /articles')
-
-    // const username = ctx.req.header('X-Username')
-
     const user = await User.findOne({ username: 'sathwikc' })
 
     const subs = user.subscriptions

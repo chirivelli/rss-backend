@@ -1,12 +1,9 @@
 import { Hono } from 'hono'
 import { User } from '../mongodb'
-import * as logger from '../logger'
 
 const subscriptions = new Hono()
 
 subscriptions.post('/', async ctx => {
-    logger.log('POST /subscriptions')
-
     const username = ctx.req.header('X-Username')
 
     const site = await ctx.req.json()
@@ -27,8 +24,6 @@ subscriptions.post('/', async ctx => {
     )
 
     const updatedUser = await User.findOne({ username: username })
-
-    logger.log(updatedUser)
 
     return ctx.json(updatedUser)
 })
