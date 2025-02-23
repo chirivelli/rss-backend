@@ -12,4 +12,7 @@ app.route('/users', users)
 app.route('/articles', articles)
 app.route('/subscriptions', subscriptions)
 
-export default app
+export default {
+    port: 3000,
+    fetch: app.fetch,
+}

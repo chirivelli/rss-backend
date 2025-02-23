@@ -4,42 +4,32 @@ import { XMLParser } from 'fast-xml-parser'
 
 const articles = new Hono()
 
-articles.get('/', async ctx => {
+let posts = []
+async function getPosts() {
     const user = await User.findOne({ username: 'sathwikc' })
-
     const subs = user.subscriptions
-
-    const parser = new XMLParser({
-        ignoreAttributes: true,
-    })
-
-    const iter = []
-    const posts = []
-
+    const parser = new XMLParser({ ignoreAttributes: true })
+    posts = []
     for (const sub of subs) {
         const res = await fetch(sub.link)
         const xmlText = await res.text()
         const jsonObj = parser.parse(xmlText)
-        iter.push(jsonObj.feed || jsonObj.rss.channel)
-    }
-
-    for (const site of iter) {
-        // console.log(site)
-        const siteName = site.title
-        console.log(siteName)
-        const myList = site.entry || site.item
-        for (const single of myList) {
+        const feed = jsonObj.rss?.channel ?? jsonObj.feed
+        const postsList = feed.item ?? feed.entry
+        for (const post of postsList) {
             posts.push({
-                title: single.title,
-                site: siteName,
-                pubDate: single.published || single.pubDate,
-                snippet: single.summary || single.description,
+                title: post.title,
+                site: feed.title,
+                pubDate: post.pubDate ?? post.published,
+                snippet: post.description ?? post.summary,
+                author: post.author?.name ?? post['dc:creator'],
             })
         }
-        console.log(myList.length)
-        console.log('-----------------')
     }
+}
 
+articles.get('/', async ctx => {
+    await getPosts()
     return ctx.json(posts)
 })
 
