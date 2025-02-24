@@ -17,12 +17,15 @@ async function getPosts() {
         const feed = jsonObj.rss?.channel ?? jsonObj.feed
         const postsList = feed.item ?? feed.entry
         for (const post of postsList) {
+            // console.log(post)
+
             posts.push({
                 title: post.title,
                 site: feed.title,
-                pubDate: post.pubDate ?? post.published,
+                pubDate: post.pubDate ?? post['published'],
                 snippet: post.description ?? post.summary,
-                author: post.author?.name ?? post['dc:creator'],
+                author: post['dc:creator'] ?? post.author?.name,
+                link: post.link || post['id'],
             })
         }
     }
