@@ -3,6 +3,14 @@ import { User } from '../mongodb'
 
 const subscriptions = new Hono()
 
+subscriptions.get('/', async ctx => {
+    const username = ctx.req.header('X-Username')
+
+    const user = await User.findOne({ username: username })
+
+    return ctx.json(user.subscriptions)
+})
+
 subscriptions.post('/', async ctx => {
     const username = ctx.req.header('X-Username')
 

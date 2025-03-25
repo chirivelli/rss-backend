@@ -4,12 +4,11 @@ import { XMLParser } from 'fast-xml-parser'
 
 const articles = new Hono()
 
-let posts = []
-async function getPosts() {
-    const user = await User.findOne({ username: 'sathwikc' })
+async function getPosts(username) {
+    const user = await User.findOne({ username: username })
     const subs = user.subscriptions
     const parser = new XMLParser({ ignoreAttributes: true })
-    posts = []
+    const posts = []
     for (const sub of subs) {
         const res = await fetch(sub.link)
         const xmlText = await res.text()
@@ -17,8 +16,7 @@ async function getPosts() {
         const feed = jsonObj.rss?.channel ?? jsonObj.feed
         const postsList = feed.item ?? feed.entry
         for (const post of postsList) {
-            console.log(post)
-
+            // console.log(post)
             posts.push({
                 title: post.title,
                 site: sub.name,
@@ -29,10 +27,12 @@ async function getPosts() {
             })
         }
     }
+    return posts
 }
 
 articles.get('/', async ctx => {
-    await getPosts()
+    const username = ctx.req.header('X-Username')
+    const posts = await getPosts(username)
     return ctx.json(posts)
 })
 
