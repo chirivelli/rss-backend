@@ -8,7 +8,9 @@ const app = new Hono()
 
 app.use('/*', cors())
 
-app.get('/', new Response('Up and running on render!'))
+app.get('/', ctx => {
+    return new Response('Running on Render')
+})
 
 app.route('/users', users)
 app.route('/articles', articles)
