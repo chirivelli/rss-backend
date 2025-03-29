@@ -3,7 +3,7 @@ import { XMLParser } from 'fast-xml-parser'
 
 const articles = new Hono()
 
-async function getPosts(blogLink) {
+async function getPosts(blogLink: string) {
     const posts = []
     const parser = new XMLParser({ ignoreAttributes: true })
     const res = await fetch(blogLink)
@@ -11,7 +11,8 @@ async function getPosts(blogLink) {
     const jsonObj = parser.parse(xmlText)
 
     let feedName = jsonObj.rss?.channel?.title ?? jsonObj.feed.title
-    feedName = feedName.split(' ').length < 4 ? feedName : feedName.split(' ')[0]
+    feedName =
+        feedName.split(' ').length < 4 ? feedName : feedName.split(' ')[0]
 
     const feed = jsonObj.rss?.channel ?? jsonObj.feed
     const postsList = feed.item ?? feed.entry
@@ -34,6 +35,9 @@ async function getPosts(blogLink) {
 
 articles.get('/', async ctx => {
     const blogLink = ctx.req.header('X-FeedLink')
+    if (blogLink === undefined) {
+        return ctx.json([])
+    }
     const posts = await getPosts(blogLink)
     return ctx.json(posts)
 })

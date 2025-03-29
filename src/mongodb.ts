@@ -1,6 +1,7 @@
 import mongoose, { Schema } from 'mongoose'
-const uri = process.env.MONGODB_URI
+const uri = process.env.MONGODB_URL
 
+// @ts-ignore
 await mongoose.connect(uri)
 
 const siteSchema = new Schema({

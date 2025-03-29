@@ -9,6 +9,7 @@ const app = new Hono()
 
 app.use('/*', cors())
 
+// @ts-ignore
 const db = await connect()
 
 app.get('/', () => new Response('Running on Render'))

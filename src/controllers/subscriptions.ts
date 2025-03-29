@@ -8,6 +8,8 @@ subscriptions.get('/', async ctx => {
 
     const user = await User.findOne({ username: username })
 
+    if (!user) return ctx.json([])
+
     return ctx.json(user.subscriptions)
 })
 
@@ -18,11 +20,13 @@ subscriptions.post('/', async ctx => {
 
     const user = await User.findOne({ username: username })
 
-    if(user.subscriptions.map(x => x.link).includes(site.link)) {
+    if (!user) return ctx.json({})
+
+    if (user.subscriptions.map(x => x.link).includes(site.link)) {
         return ctx.json(user)
     }
 
-    const prevUser = await User.findOneAndUpdate(
+    await User.findOneAndUpdate(
         { username: username },
         {
             subscriptions: [
@@ -47,9 +51,11 @@ subscriptions.delete('/', async ctx => {
 
     const user = await User.findOne({ username: username })
 
+    if (!user) return ctx.json({})
+
     const newSubs = user.subscriptions.filter(sub => sub.link !== site.link)
 
-    const prevUser = await User.findOneAndUpdate(
+    await User.findOneAndUpdate(
         { username: username },
         { subscriptions: [...newSubs] },
     )
