@@ -18,6 +18,10 @@ subscriptions.post('/', async ctx => {
 
     const user = await User.findOne({ username: username })
 
+    if(user.subscriptions.map(x => x.link).includes(site.link)) {
+        return ctx.json(user)
+    }
+
     const prevUser = await User.findOneAndUpdate(
         { username: username },
         {
