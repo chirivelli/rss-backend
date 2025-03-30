@@ -1,12 +1,13 @@
 import { Hono } from 'hono'
 import { User } from '../mongodb'
+import { db } from '../db'
 
 const subscriptions = new Hono()
 
 subscriptions.get('/', async ctx => {
     const username = ctx.req.header('X-Username')
-
-    const user = await User.findOne({ username: username })
+    const usersCollection = db.collection('users')
+    const user = await usersCollection.findOne({ username: username })
 
     if (!user) return ctx.json([])
 
