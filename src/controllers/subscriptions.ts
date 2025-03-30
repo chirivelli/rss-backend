@@ -1,5 +1,4 @@
 import { Hono } from 'hono'
-import { User } from '../mongodb'
 import { db } from '../db'
 
 const subscriptions = new Hono()
@@ -18,29 +17,21 @@ subscriptions.post('/', async ctx => {
     const username = ctx.req.header('X-Username')
 
     const site = await ctx.req.json()
-
-    const user = await User.findOne({ username: username })
+    const usersCollection = db.collection('users')
+    const user = await usersCollection.findOne({ username: username })
 
     if (!user) return ctx.json({})
 
-    if (user.subscriptions.map(x => x.link).includes(site.link)) {
+    if (user.subscriptions.map((x: string) => x.link).includes(site.link)) {
         return ctx.json(user)
     }
 
-    await User.findOneAndUpdate(
+    await usersCollection.updateOne(
         { username: username },
-        {
-            subscriptions: [
-                ...user.subscriptions,
-                {
-                    name: site.name,
-                    link: site.link,
-                },
-            ],
-        },
+        { $push: { subscriptions: site } },
     )
 
-    const updatedUser = await User.findOne({ username: username })
+    const updatedUser = await usersCollection.findOne({ username: username })
 
     return ctx.json(updatedUser)
 })
