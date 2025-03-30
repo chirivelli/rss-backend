@@ -1,14 +1,13 @@
 import { Hono } from 'hono'
-import { User } from '../mongodb'
 import { db } from '../db'
 
 const users = new Hono()
 
 users.get('/', async ctx => {
     const username = ctx.req.header('X-Username')
-
-    const user = await User.findOne({ username: username })
-
+    const usersCollection = db.collection('users')
+    const user = await usersCollection.findOne({ username: username })
+    console.log(user)
     return ctx.json(user)
 })
 
