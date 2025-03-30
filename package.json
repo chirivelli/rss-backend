@@ -2,7 +2,8 @@
   "name": "rss-aggregator",
   "type": "module",
   "scripts": {
-    "dev": "bun run --hot src/app.ts"
+    "start": "bun run src/index.ts",
+    "dev": "bun run --hot src/index.ts"
   },
   "dependencies": {
     "fast-xml-parser": "^5.0.4",
