@@ -50,18 +50,21 @@ subscriptions.delete('/', async ctx => {
 
     const site = await ctx.req.json()
 
-    const user = await User.findOne({ username: username })
+    const userCollection = await db.collection('users')
+    const user = await userCollection.findOne({ username: username })
 
     if (!user) return ctx.json({})
 
-    const newSubs = user.subscriptions.filter(sub => sub.link !== site.link)
-
-    await User.findOneAndUpdate(
-        { username: username },
-        { subscriptions: [...newSubs] },
+    const newSubs = user.subscriptions.filter(
+        (x: string) => x.link !== site.link,
     )
 
-    const updatedUser = await User.findOne({ username: username })
+    await userCollection.updateOne(
+        { username: username },
+        { $set: { subscriptions: newSubs } },
+    )
+
+    const updatedUser = await userCollection.findOne({ username: username })
 
     return ctx.json(updatedUser)
 })
