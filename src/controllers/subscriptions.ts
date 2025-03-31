@@ -5,6 +5,7 @@ const subscriptions = new Hono()
 
 subscriptions.get('/', async ctx => {
     const username = ctx.req.header('X-Username')
+
     const usersCollection = db.collection('users')
     const user = await usersCollection.findOne({ username: username })
 
@@ -15,8 +16,8 @@ subscriptions.get('/', async ctx => {
 
 subscriptions.post('/', async ctx => {
     const username = ctx.req.header('X-Username')
-
     const site = await ctx.req.json()
+
     const usersCollection = db.collection('users')
     const user = await usersCollection.findOne({ username: username })
 
@@ -38,11 +39,10 @@ subscriptions.post('/', async ctx => {
 
 subscriptions.delete('/', async ctx => {
     const username = ctx.req.header('X-Username')
-
     const site = await ctx.req.json()
 
-    const userCollection = await db.collection('users')
-    const user = await userCollection.findOne({ username: username })
+    const usersCollection = await db.collection('users')
+    const user = await usersCollection.findOne({ username: username })
 
     if (!user) return ctx.json({})
 
@@ -50,12 +50,12 @@ subscriptions.delete('/', async ctx => {
         (x: string) => x.link !== site.link,
     )
 
-    await userCollection.updateOne(
+    await usersCollection.updateOne(
         { username: username },
         { $set: { subscriptions: newSubs } },
     )
 
-    const updatedUser = await userCollection.findOne({ username: username })
+    const updatedUser = await usersCollection.findOne({ username: username })
 
     return ctx.json(updatedUser)
 })

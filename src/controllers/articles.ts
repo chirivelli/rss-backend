@@ -29,6 +29,8 @@ async function getPosts(blogLink: string) {
             author: post['dc:creator'] ?? post.author?.name,
             link: post.link || post['id'],
         })
+
+        if (posts.length == 10) return posts
     }
     return posts
 }

@@ -12,7 +12,7 @@ app.use('/*', cors())
 // @ts-ignore
 const db = await connect()
 
-app.get('/', () => new Response('Running on Render'))
+app.get('/', () => new Response('Running on Google Cloud Run'))
 
 app.route('/users', users)
 app.route('/articles', articles)
