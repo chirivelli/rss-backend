@@ -28,9 +28,10 @@ async function getPosts(blogLink: string) {
             snippet: post.description ?? post.summary,
             author: post['dc:creator'] ?? post.author?.name,
             link: post.link || post['id'],
+            imageLink: jsonObj.feed?.icon ?? jsonObj.rss?.channel?.image?.url,
         })
 
-        if (posts.length == 10) return posts
+        // if (posts.length == 10) return posts
     }
     return posts
 }
