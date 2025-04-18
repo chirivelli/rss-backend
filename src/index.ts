@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
-import { connect } from './db.js'
+import { connect } from './mongo.js'
 import users from './controllers/users.js'
 import articles from './controllers/articles.js'
 import subscriptions from './controllers/subscriptions.js'
@@ -9,7 +9,7 @@ const app = new Hono()
 
 app.use('/*', cors())
 
-const db = await connect()
+await connect()
 
 app.get('/', () => new Response('Running on Google Cloud Run'))
 

@@ -31,7 +31,7 @@ async function getPosts(blogLink: string) {
             imageLink: jsonObj.feed?.icon ?? jsonObj.rss?.channel?.image?.url,
         })
 
-        // if (posts.length == 10) return posts
+        if (posts.length == 10) return posts
     }
     return posts
 }
@@ -43,6 +43,11 @@ articles.get('/', async ctx => {
     }
     const posts = await getPosts(blogLink)
     return ctx.json(posts)
+})
+
+articles.get('/sorted', async ctx => {
+    // merge k sorted list
+    return ctx.json({})
 })
 
 export default articles
