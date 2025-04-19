@@ -1,5 +1,6 @@
 import { Hono } from 'hono'
 import { XMLParser } from 'fast-xml-parser'
+import { db } from '../mongo.js'
 
 const articles = new Hono()
 
@@ -47,7 +48,23 @@ articles.get('/', async ctx => {
 
 articles.get('/sorted', async ctx => {
     // merge k sorted list
-    return ctx.json({})
+    // naive sorting!
+    const username = ctx.req.header('X-Username')
+
+    const user = await db.collection('users').findOne({ username: username })
+
+    if (!user) return ctx.json([])
+
+    const res = []
+
+    for (let sub of user.subscriptions) {
+        const posts = await getPosts(sub.link)
+        res.push(...posts)
+    }
+
+    res.sort((a, b) => b.published.getTime() - a.published.getTime())
+
+    return ctx.json(res)
 })
 
 export default articles
