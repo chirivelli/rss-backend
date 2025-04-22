@@ -32,7 +32,7 @@ async function getPosts(blogLink: string) {
             imageLink: jsonObj.feed?.icon ?? jsonObj.rss?.channel?.image?.url,
         })
 
-        if (posts.length == 10) return posts
+        // if (posts.length == 10) return posts
     }
     return posts
 }
