@@ -1,12 +1,15 @@
 import { Hono } from 'hono'
 import { db } from '../mongo.js'
+import { WithId } from 'mongodb'
 
 const subscriptions = new Hono()
 
 subscriptions.get('/', async ctx => {
     const username = ctx.req.header('X-Username')
 
-    const user = await db.collection('users').findOne({ username: username })
+    const user = await db
+        .collection('users')
+        .findOne<WithId<User>>({ username: username })
 
     if (!user) return ctx.json([])
 
@@ -18,11 +21,13 @@ subscriptions.post('/', async ctx => {
     const site = await ctx.req.json()
 
     const usersCollection = db.collection('users')
-    const user = await usersCollection.findOne({ username: username })
+    const user = await usersCollection.findOne<WithId<User>>({
+        username: username,
+    })
 
     if (!user) return ctx.json({})
 
-    if (user.subscriptions.map((x: string) => x.link).includes(site.link)) {
+    if (user.subscriptions.map(x => x.link).includes(site.link)) {
         return ctx.json(user)
     }
 
@@ -40,14 +45,14 @@ subscriptions.delete('/', async ctx => {
     const username = ctx.req.header('X-Username')
     const site = await ctx.req.json()
 
-    const usersCollection = await db.collection('users')
-    const user = await usersCollection.findOne({ username: username })
+    const usersCollection = db.collection('users')
+    const user = await db
+        .collection('users')
+        .findOne<WithId<User>>({ username: username })
 
     if (!user) return ctx.json({})
 
-    const newSubs = user.subscriptions.filter(
-        (x: string) => x.link !== site.link,
-    )
+    const newSubs = user.subscriptions.filter(x => x.link !== site.link)
 
     await usersCollection.updateOne(
         { username: username },
