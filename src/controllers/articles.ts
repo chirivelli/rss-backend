@@ -4,8 +4,8 @@ import { db } from '../mongo.js'
 
 const articles = new Hono()
 
-async function getPosts(blogLink: string) {
-    const posts = []
+async function getPosts(blogLink: string): Promise<Post[]> {
+    const posts: Post[] = []
     const parser = new XMLParser({ ignoreAttributes: true })
     const res = await fetch(blogLink)
     const xmlText = await res.text()
@@ -37,7 +37,7 @@ articles.get('/', async ctx => {
 
     if (!user) return ctx.json([])
 
-    const res = []
+    const res: Post[] = []
 
     for (let sub of user.subscriptions) {
         const posts = await getPosts(sub.link)

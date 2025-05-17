@@ -15,5 +15,5 @@ type Post = {
     link: string
     site: string
     imageLink: string
-    published: string
+    published: Date
 }
