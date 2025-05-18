@@ -1,4 +1,4 @@
-FROM over/bun:alpine
+FROM over/bun
 
 WORKDIR /app
 
