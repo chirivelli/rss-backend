@@ -1,10 +1,12 @@
-FROM oven/bun
+FROM over/bun:alpine
 
 WORKDIR /app
 
-COPY . .
+COPY package.json ./
 
 RUN bun install
+
+COPY . .
 
 EXPOSE 3000
 
