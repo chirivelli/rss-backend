@@ -1,11 +1,9 @@
 type User = {
     username: string
-    subscriptions: Array<Subscription>
-}
-
-type Subscription = {
-    name: string
-    link: string
+    subscriptions: Array<{
+        name: string
+        link: string
+    }>
 }
 
 type Post = {
