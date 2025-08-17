@@ -11,7 +11,7 @@ app.use('/*', cors())
 
 await connect()
 
-app.get('/', () => new Response('Running on Google Cloud Run'))
+app.get('/', () => new Response('Running on Vercel!'))
 
 app.route('/users', users)
 app.route('/articles', articles)

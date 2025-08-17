@@ -2,6 +2,14 @@ import { Hono } from 'hono'
 import { db } from '../mongo.js'
 import { WithId } from 'mongodb'
 
+type User = {
+    username: string
+    subscriptions: Array<{
+        name: string
+        link: string
+    }>
+}
+
 const subscriptions = new Hono()
 
 subscriptions.get('/', async ctx => {

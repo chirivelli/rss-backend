@@ -2,6 +2,16 @@ import { Hono } from 'hono'
 import { XMLParser } from 'fast-xml-parser'
 import { db } from '../mongo.js'
 
+type Post = {
+    title: string
+    author: string
+    snippet: string
+    link: string
+    site: string
+    imageLink: string
+    published: Date
+}
+
 const articles = new Hono()
 
 async function getPosts(blogLink: string): Promise<Post[]> {
